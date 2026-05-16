@@ -1,14 +1,18 @@
 BOOKSTORE CUSTOMER + ADMIN WEB APP
-Flask + SQLAlchemy ORM + MySQL Workbench
+Flask + SQLAlchemy ORM + Supabase Postgres
 
-SETUP:
-1. Open app.py.
-2. Edit MYSQL_USER and MYSQL_PASSWORD near the top if needed.
-   XAMPP default is usually:
-       MYSQL_USER = "root"
-       MYSQL_PASSWORD = ""
-3. Make sure MySQL Server is running.
+SETUP (Supabase):
+1. Create a Supabase project.
+2. Get these values from Supabase Project Settings -> Database -> Connection string info:
+   - SUPABASE_URL (REST URL, e.g. https://xxxx.supabase.co)
+   - SUPABASE_SERVICE_ROLE_KEY (service role secret)
+3. Local development (.env):
+   - Create a `.env` file in this project directory with:
+       SUPABASE_URL=...
+       SUPABASE_SERVICE_ROLE_KEY=...
+   - (Optional) You can also set them in your shell/terminal.
 4. Install packages:
+
        python -m pip install -r requirements.txt
 5. Run:
        python app.py
@@ -16,17 +20,12 @@ SETUP:
        http://127.0.0.1:5000
 
 DATABASE:
-- The app automatically creates database bookstore_db if it does not exist.
-- The app automatically creates all tables.
+- On startup, the app creates the tables from ORM models in your Supabase Postgres database.
 
-MYSQL WORKBENCH CHECK:
-USE bookstore_db;
-SHOW TABLES;
-SELECT * FROM authors;
-SELECT * FROM books;
-SELECT * FROM customers;
-SELECT * FROM orders;
-SELECT * FROM order_items;
+Notes:
+- This app uses the Service Role key for server-side DB access.
+- If you want RLS/policy-based access from the client, that requires a different approach (not used here).
+
 
 MAIN PAGES:
 Customer shop:
