@@ -19,8 +19,10 @@ Open:
     http://127.0.0.1:5000
 """
 
+import os
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
+from urllib.parse import urlparse
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from sqlalchemy import create_engine, Column, Integer, String, Numeric, ForeignKey, DateTime, text
@@ -31,14 +33,25 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 # ==========================================================
 # MYSQL CONFIGURATION
 # ==========================================================
-# Edit these values based on your MySQL Workbench / XAMPP setup.
-# If XAMPP MySQL has no password, keep MYSQL_PASSWORD = ""
+# On Railway, DATABASE_URL is set automatically by the MySQL service.
+# Format: mysql+pymysql://user:password@host:port/database
+# Falls back to localhost credentials for local development.
 
-MYSQL_HOST = "localhost"
-MYSQL_PORT = 3306
-MYSQL_USER = "root"
-MYSQL_PASSWORD = "Aroako123."
-DATABASE_NAME = "bookstore_db"
+_DATABASE_URL = os.environ.get("DATABASE_URL", "")
+
+if _DATABASE_URL:
+    _parsed = urlparse(_DATABASE_URL)
+    MYSQL_HOST = _parsed.hostname
+    MYSQL_PORT = _parsed.port or 3306
+    MYSQL_USER = _parsed.username
+    MYSQL_PASSWORD = _parsed.password
+    DATABASE_NAME = _parsed.path.lstrip("/")
+else:
+    MYSQL_HOST = "localhost"
+    MYSQL_PORT = 3306
+    MYSQL_USER = "root"
+    MYSQL_PASSWORD = ""
+    DATABASE_NAME = "bookstore_db"
 
 # ==========================================================
 # FLASK SETUP
@@ -156,12 +169,17 @@ def setup_database():
     global DBSession
 
     try:
-        server_engine = create_engine(make_url())
-        with server_engine.connect() as conn:
-            conn.execute(text(f"CREATE DATABASE IF NOT EXISTS {DATABASE_NAME}"))
-            conn.commit()
+        if _DATABASE_URL:
+            # On Railway the database is already provisioned; connect directly.
+            db_engine = create_engine(_DATABASE_URL)
+        else:
+            # Local development: create the database if it doesn't exist yet.
+            server_engine = create_engine(make_url())
+            with server_engine.connect() as conn:
+                conn.execute(text(f"CREATE DATABASE IF NOT EXISTS {DATABASE_NAME}"))
+                conn.commit()
+            db_engine = create_engine(make_url(DATABASE_NAME))
 
-        db_engine = create_engine(make_url(DATABASE_NAME))
         Base.metadata.create_all(db_engine)
         
         # Run migrations for any missing columns
