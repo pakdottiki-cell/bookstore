@@ -171,7 +171,10 @@ def setup_database():
     try:
         if _DATABASE_URL:
             # On Railway the database is already provisioned; connect directly.
-            db_engine = create_engine(_DATABASE_URL)
+            # Railway provides mysql:// but SQLAlchemy requires mysql+pymysql://
+            # to use the pymysql driver instead of the unavailable MySQLdb driver.
+            _engine_url = _DATABASE_URL.replace("mysql://", "mysql+pymysql://", 1)
+            db_engine = create_engine(_engine_url)
         else:
             # Local development: create the database if it doesn't exist yet.
             server_engine = create_engine(make_url())
