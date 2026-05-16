@@ -1,0 +1,10 @@
+{% extends "admin_base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block admin_content %}
+<div class="stats">
+    <div class="stat"><h2>{{ author_count }}</h2><p>Authors</p></div>
+    <div class="stat"><h2>{{ book_count }}</h2><p>Books</p></div>
+    <div class="stat"><h2>{{ customer_count }}</h2><p>Customers</p></div>
+    <div class="stat"><h2>{{ order_count }}</h2><p>Orders</p></div>
+</div>
+{% endblock %}

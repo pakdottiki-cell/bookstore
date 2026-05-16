@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Cart - Bookstore{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>Your Cart</h1>
+</div>
+{% if items %}
+<form method="post" action="{{ url_for('update_cart') }}">
+<table class="table">
+    <tr><th>Book</th><th>Price</th><th>Quantity</th><th>Subtotal</th><th>Action</th></tr>
+    {% for item in items %}
+    <tr>
+        <td>{{ item.book.title }}</td>
+        <td>₱{{ item.book.price }}</td>
+        <td><input style="width:90px" type="number" min="0" max="{{ item.book.stock }}" name="qty_{{ item.book.id }}" value="{{ item.quantity }}"></td>
+        <td>₱{{ item.subtotal }}</td>
+        <td>
+            <form class="inline" method="post" action="{{ url_for('remove_from_cart', book_id=item.book.id) }}"></form>
+            <button class="btn btn-danger" type="submit" formaction="{{ url_for('remove_from_cart', book_id=item.book.id) }}">Remove</button>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<br>
+<div class="total-box">Total: ₱{{ total }}</div>
+<br>
+<button class="btn btn-primary" type="submit">Update Cart</button>
+<a class="btn btn-success" href="{{ url_for('checkout') }}">Proceed to Checkout</a>
+<a class="btn btn-secondary" href="{{ url_for('shop') }}">Continue Shopping</a>
+</form>
+{% else %}
+<div class="card"><p>Your cart is empty.</p><a class="btn btn-primary" href="{{ url_for('shop') }}">Shop Now</a></div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Order Success - Bookstore{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>Order Placed Successfully!</h1>
+<p>Your order has been placed successfully.</p>
+    <p><strong>Order ID:</strong> {{ order.id }}</p>
+    <p><strong>Name:</strong> {{ order.customer.name }}</p>
+    <p><strong>Status:</strong> {{ order.status }}</p>
+    <a class="btn btn-primary" href="{{ url_for('shop') }}">Continue Shopping</a>
+</div>
+{% endblock %}

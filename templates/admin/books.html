@@ -1,0 +1,6 @@
+{% extends "admin_base.html" %}
+{% block admin_content %}
+<div class="card"><h2>Books</h2><a class="btn btn-success" href="{{ url_for('admin_add_book') }}">Add Book</a></div>
+<table class="table"><tr><th>ID</th><th>Title</th><th>Author</th><th>Genre</th><th>Price</th><th>Stock</th><th>Actions</th></tr>
+{% for book in books %}<tr><td>{{ book.id }}</td><td>{{ book.title }}</td><td>{{ book.author.name }}</td><td>{{ book.genre or 'N/A' }}</td><td>₱{{ book.price }}</td><td>{{ book.stock }}</td><td class="actions"><a class="btn btn-warning" href="{{ url_for('admin_edit_book', book_id=book.id) }}">Edit</a> <form class="inline" method="post" action="{{ url_for('admin_delete_book', book_id=book.id) }}" onsubmit="return confirm('Delete book?')"><button class="btn btn-danger">Delete</button></form></td></tr>{% else %}<tr><td colspan="7">No books.</td></tr>{% endfor %}</table>
+{% endblock %}

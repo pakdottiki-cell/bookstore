@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}{{ book.title }} - Bookstore{% endblock %}
+{% block content %}
+<div class="card two-col">
+    <div>
+        <h1>{{ book.title }}</h1>
+        <p><strong>Author:</strong> {{ book.author.name }}</p>
+        <p><strong>Genre:</strong> {{ book.genre or 'N/A' }}</p>
+        <p class="price">₱{{ book.price }}</p>
+        <p><strong>Stock:</strong> {{ book.stock }}</p>
+        <p>{{ book.description or 'No description available.' }}</p>
+    </div>
+    <div>
+        <h2>Order this book</h2>
+        {% if book.stock > 0 %}
+        <form method="post" action="{{ url_for('add_to_cart', book_id=book.id) }}">
+            <div class="form-group">
+                <label>Quantity</label>
+                <input type="number" name="quantity" min="1" max="{{ book.stock }}" value="1" required>
+            </div>
+            <button class="btn btn-success" type="submit">Add to Cart</button>
+        </form>
+        {% else %}
+            <p>Out of stock.</p>
+        {% endif %}
+    </div>
+</div>
+<a class="btn btn-secondary" href="{{ url_for('shop') }}">Back to Shop</a>
+{% endblock %}

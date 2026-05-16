@@ -1,0 +1,6 @@
+{% extends "admin_base.html" %}
+{% block admin_content %}
+<div class="card"><h2>Authors</h2><a class="btn btn-success" href="{{ url_for('admin_add_author') }}">Add Author</a></div>
+<table class="table"><tr><th>ID</th><th>Name</th><th>Books</th><th>Actions</th></tr>
+{% for author in authors %}<tr><td>{{ author.id }}</td><td>{{ author.name }}</td><td>{{ author.books|length }}</td><td class="actions"><a class="btn btn-warning" href="{{ url_for('admin_edit_author', author_id=author.id) }}">Edit</a> <form class="inline" method="post" action="{{ url_for('admin_delete_author', author_id=author.id) }}" onsubmit="return confirm('Delete author?')"><button class="btn btn-danger">Delete</button></form></td></tr>{% else %}<tr><td colspan="4">No authors.</td></tr>{% endfor %}</table>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Checkout - Bookstore{% endblock %}
+{% block content %}
+<div class="two-col">
+    <div class="card">
+        <h1>Checkout</h1>
+        <form method="post">
+            <div class="form-group"><label>Full Name</label><input type="text" name="name" required></div>
+            <div class="form-group"><label>Email</label><input type="email" name="email" required></div>
+            <div class="form-group"><label>Phone</label><input type="text" name="phone"></div>
+            <div class="form-group"><label>Address</label><textarea name="address" required></textarea></div>
+            <button class="btn btn-success" type="submit">Place Order</button>
+            <a class="btn btn-secondary" href="{{ url_for('cart') }}">Back to Cart</a>
+        </form>
+    </div>
+    <div class="card">
+        <h2>Order Summary</h2>
+        {% for item in items %}
+            <p>{{ item.quantity }} × {{ item.book.title }} = ₱{{ item.subtotal }}</p>
+        {% endfor %}
+        <hr>
+        <h2>Total: ₱{{ total }}</h2>
+    </div>
+</div>
+{% endblock %}

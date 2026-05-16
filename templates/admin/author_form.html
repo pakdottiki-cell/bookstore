@@ -1,0 +1,2 @@
+{% extends "admin_base.html" %}
+{% block admin_content %}<div class="card"><h2>{% if author %}Edit{% else %}Add{% endif %} Author</h2><form method="post"><div class="form-group"><label>Name</label><input name="name" value="{{ author.name if author else '' }}" required></div><button class="btn btn-success">Save</button> <a class="btn btn-secondary" href="{{ url_for('admin_authors') }}">Cancel</a></form></div>{% endblock %}
